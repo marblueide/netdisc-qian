@@ -1,0 +1,10 @@
+/* CDN 服务仅供平台体验和调试使用，平台不承诺服务的稳定性，企业客户需下载字体包自行发布使用并做好备份。 */
+@font-face {
+  font-family: "阿里巴巴普惠体 2.0 55 Regular";font-weight: 400;src: url("//at.alicdn.com/wf/webfont/602dbcxVCTAj/6O1XVhR1xTr_W8EHCRkAG.woff2") format("woff2"),
+  url("//at.alicdn.com/wf/webfont/602dbcxVCTAj/m_AievT85Eu1cNs9xNxx6.woff") format("woff");
+  font-display: swap;
+}
+
+body{
+  font-family: "阿里巴巴普惠体 2.0 55 Regular";
+}
