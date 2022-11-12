@@ -24,13 +24,15 @@ app.mount("#app");
 const store = userStore();
 
 router.beforeEach((to, from) => {
+  const authorization = localStorage.getItem("Authorization")
+  console.log(authorization)
   if (to.name == "login") {
-    if (store.isLogin) {
+    if (authorization) {
       return "pandown";
     }
     return true;
   } else {
-    if (store.isLogin) {
+    if (authorization) {
       return true;
     } else {
       return "login";

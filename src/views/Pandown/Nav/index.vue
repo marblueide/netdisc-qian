@@ -13,7 +13,7 @@
           </template>
           <div class="user-box">
             <ul>
-              <li>登出</li>
+              <li @click="handleOutLogin">登出</li>
             </ul>
           </div>
         </el-popover>
@@ -47,9 +47,9 @@ const user = userStore();
 const data = useData();
 const { transFormListFlag } = storeToRefs(data);
 
-const handleTransfrom = () => {
-  transFormListFlag.value = true;
-};
+const handleOutLogin = () => {
+  user.outLogin()
+}
 
 const trrigerFlag = (b: boolean) => [(transFormListFlag.value = b)];
 </script>

@@ -8,7 +8,7 @@ export const useData = defineStore("data", () => {
   const isRoot = computed(() => {
     return path.value.length == 1;
   });
-  const isclear = ref(false)
+  const isclear = ref(false);
   const fileList = ref<Array<fileObj>>([]);
   const SIZE = 10 * 1024 * 1024;
   const { fileList: uploadList, addFile, deleteFile } = useFileCut(SIZE);
@@ -19,14 +19,18 @@ export const useData = defineStore("data", () => {
   });
 
   const getList = async () => {
-    let {
-      data: { getPath: data },
-    } = await getDirectoryList(path.value.join("/").replace("//", "/"));
-    data = [...data];
-    data.sort((a, b) => {
-      return +b.directory - +a.directory;
-    });
-    fileList.value = data;
+    try {
+      let {
+        data: { getPath: data },
+      } = await getDirectoryList(pathStirng.value);
+      data = [...data];
+      data.sort((a, b) => {
+        return +b.directory - +a.directory;
+      });
+      fileList.value = data;
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   const setPath = (paths: string[]) => {
@@ -65,8 +69,6 @@ export const useData = defineStore("data", () => {
     deleteFile,
     transFormListFlag,
     setPath,
-    isclear
+    isclear,
   };
 });
-
-

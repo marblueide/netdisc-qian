@@ -36,3 +36,7 @@ export const apolloClient = new ApolloClient({
 export function setAuthorization(authorization: string) {
   headers["Authorization"] = `Bearer ${authorization}`;
 }
+
+export function removeAuthorization(){
+  delete headers['Authorization']
+}

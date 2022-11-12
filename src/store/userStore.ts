@@ -1,21 +1,21 @@
 import { defineStore } from "pinia";
 import { login as loginAPi } from "@/api";
 import { ElMessage } from "element-plus";
-import { setAuthorization } from "@/utils/apolloClient";
+import { removeAuthorization, setAuthorization } from "@/utils/apolloClient";
 import { removeHeaders, setHeaders } from "@/utils/axios";
 import { computed, reactive, ref } from "vue";
+import router from "@/router";
 
 export const userStore = defineStore("user", () => {
-  const user = JSON.parse(localStorage.getItem("user") || '{}') ;
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const authorization = localStorage.getItem("Authorization");
   const data = reactive<{
-    Authorization: string | null;
     name: string | null;
     username: string | null;
     id: string | null;
     diskSize: number;
     useSize: number;
   }>({
-    Authorization: localStorage.getItem("Authorization"),
     name: user.name || null,
     username: user.username || null,
     id: user.id || null,
@@ -23,11 +23,11 @@ export const userStore = defineStore("user", () => {
     useSize: user.useSize || null,
   });
 
-  data.Authorization && setAuthorization(data.Authorization);
-  data.Authorization && setHeaders("Authorization", `Bearer ${data.Authorization}`);
+  authorization && setAuthorization(authorization);
+  authorization && setHeaders("Authorization", `Bearer ${authorization}`);
 
   const isLogin = computed(() => {
-    return !!data.Authorization;
+    return !!localStorage.getItem("Authorization");
   });
 
   const login = async (username: string, password: string) => {
@@ -41,14 +41,12 @@ export const userStore = defineStore("user", () => {
         diskSize,
         useSize,
       } = res.data.login;
-      data.Authorization = authorization;
       data.name = name;
       data.username = user;
       data.id = id;
       data.diskSize = diskSize;
       data.useSize = useSize;
-      setAuthorization(authorization);
-      setHeaders("Authorization", `Bearer ${authorization}`);
+      setAuthorization(authorization)
       localStorage.setItem("Authorization", authorization);
       localStorage.setItem(
         "user",
@@ -73,13 +71,15 @@ export const userStore = defineStore("user", () => {
   };
 
   const outLogin = () => {
-    data.Authorization = null;
     data.name = null;
     data.username = null;
     data.id = null;
     data.diskSize = 0;
     data.useSize = 0;
-    removeHeaders("Authorization");
+    removeAuthorization()
+    localStorage.removeItem("Authorization");
+    localStorage.removeItem("user");
+    router.push({ name: "login" });
   };
 
   return {

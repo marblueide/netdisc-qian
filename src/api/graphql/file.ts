@@ -1,22 +1,36 @@
 import {
+  ApolloError,
   ApolloQueryResult,
   FetchResult,
   useMutation as useMutationUpload,
 } from "@apollo/client";
-import {
-  MutateFunction,
-  provideApolloClient,
-  useMutation,
-  useQuery,
-} from "@vue/apollo-composable";
+import { MutateFunction, provideApolloClient } from "@vue/apollo-composable";
 import gql from "graphql-tag";
-import { apolloClient } from "@/utils/apolloClient";
-import axios from "../../utils/axios";
+import { apolloClient, removeAuthorization } from "@/utils/apolloClient";
 import { fileObj, generRes } from "@/types";
+import { useQuery as query, useMutation as mutate } from "@/utils/graphql";
+import { userStore } from "@/store";
+import router from "@/router";
+
+const errorMiddleFn = (error: ApolloError) => {
+  let { message } = error;
+  message = message.toUpperCase();
+  if (message.includes("UNAUTHORIZED")) {
+    const store = userStore();
+    store.outLogin();
+    router.push({ name: "login" });
+  }
+};
+
+const authorizationMiddle = () => {
+  const authorization = localStorage.getItem("Authorization")
+  !authorization && removeAuthorization()
+}
+
+const useQuery = query(errorMiddleFn,authorizationMiddle);
+const useMutation = mutate(errorMiddleFn,authorizationMiddle);
 
 provideApolloClient(apolloClient);
-
-
 
 export const getDirectoryList = async (
   dir: string

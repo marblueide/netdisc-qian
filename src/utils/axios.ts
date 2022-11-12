@@ -1,4 +1,6 @@
+import { userStore } from "@/store";
 import axios from "axios";
+import router from "@/router"
 
 const headers: {
   [prop in string]: string;
@@ -12,21 +14,29 @@ const instance = axios.create({
 });
 
 instance.interceptors.request.use((config) => {
-  for (const prop in headers) {
+
     //@ts-ignore
-    config.headers[prop] = headers[prop];
-  }
+    config.headers.Authorization = localStorage.getItem("Authorization")
   return config;
 });
 
-instance.interceptors.response.use((res) => {
-  let result = {
-    data: res.data,
-    code: res.status,
-    headers: res.headers,
-  };
-  return result;
-});
+instance.interceptors.response.use(
+  (res) => {
+    let result = {
+      data: res.data,
+      code: res.status,
+      headers: res.headers,
+    };
+    return result;
+  },
+  (error) => {
+    const store = userStore();
+    if (error.response.status == 401) {
+      store.outLogin();
+      router.push({name:'login'})
+    }
+  }
+);
 
 export const setHeaders = (name: string, value: string) => {
   headers[name] = value;
