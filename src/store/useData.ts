@@ -29,27 +29,26 @@ export const useData = defineStore("data", () => {
       });
       fileList.value = data;
     } catch (error) {
-      console.log(error)
+      
     }
   };
 
-  const setPath = (paths: string[]) => {
+  const setPath = (paths: string[],lazy:boolean = true) => {
     uPath();
     path.value = paths;
+    !lazy && getList()
     uPath = watch(
       path.value,
-      (path) => {
+      (path, oldPath) => {
+        console.log(path, oldPath);
         getList();
-      },
-      {
-        immediate: true,
       }
     );
   };
 
   let uPath = watch(
     path.value,
-    (path) => {
+    (path, oldPath) => {
       getList();
     },
     {

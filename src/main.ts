@@ -7,7 +7,6 @@ import "element-plus/dist/index.css";
 import { apolloClient } from "@/utils/apolloClient";
 import { DefaultApolloClient } from "@vue/apollo-composable";
 import { createPinia } from "pinia";
-import { userStore } from "./store/userStore";
 import "./css/global.css"
 
 const app = createApp(App);
@@ -21,11 +20,8 @@ app.use(createPinia());
 
 app.mount("#app");
 
-const store = userStore();
-
 router.beforeEach((to, from) => {
   const authorization = localStorage.getItem("Authorization")
-  console.log(authorization)
   if (to.name == "login") {
     if (authorization) {
       return "pandown";

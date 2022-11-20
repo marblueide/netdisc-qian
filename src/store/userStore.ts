@@ -5,6 +5,7 @@ import { removeAuthorization, setAuthorization } from "@/utils/apolloClient";
 import { removeHeaders, setHeaders } from "@/utils/axios";
 import { computed, reactive, ref } from "vue";
 import router from "@/router";
+import { useData } from './useData';
 
 export const userStore = defineStore("user", () => {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
@@ -71,6 +72,8 @@ export const userStore = defineStore("user", () => {
   };
 
   const outLogin = () => {
+    const {setPath} = useData();
+    setPath(["/"])
     data.name = null;
     data.username = null;
     data.id = null;

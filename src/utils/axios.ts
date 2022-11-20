@@ -1,6 +1,6 @@
 import { userStore } from "@/store";
 import axios from "axios";
-import router from "@/router"
+import router from "@/router";
 
 const headers: {
   [prop in string]: string;
@@ -14,9 +14,9 @@ const instance = axios.create({
 });
 
 instance.interceptors.request.use((config) => {
-
-    //@ts-ignore
-    config.headers.Authorization = localStorage.getItem("Authorization")
+  const authorization = localStorage.getItem("Authorization");
+  //@ts-ignore
+  config.headers.Authorization = `Bearer ${authorization}`;
   return config;
 });
 
@@ -33,7 +33,7 @@ instance.interceptors.response.use(
     const store = userStore();
     if (error.response.status == 401) {
       store.outLogin();
-      router.push({name:'login'})
+      router.push({ name: "login" });
     }
   }
 );

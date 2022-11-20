@@ -122,7 +122,7 @@ const handleOpenFile = (p: string) => {
   if (pathStirng.value == p) return;
   const paths = p.split("/");
   paths[0] = "/";
-  store.setPath(paths);
+  store.setPath(paths,false);
 };
 
 const handleCloseFile = (item: File_Cut) => {
